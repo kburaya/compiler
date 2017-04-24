@@ -9,21 +9,27 @@ grammar Grammar;
 //
 
 program
-    :   statement*
+    :   statement
     ;
 
 statement
     :   globalDeclaration
-    |   expression ';'
+    |   write
+    |   expression
+    |   first=statement ';' second=statement
     ;
-
 
 variable
     :   Identifier
     ;
 
 globalDeclaration
-    :   Identifier ':=' expression ';'
+    :   Identifier ':=' expression
+    ;
+
+
+write
+    :   'write' '(' expression ')'
     ;
 
 expression
@@ -39,6 +45,7 @@ expression
 basic
     :   '(' expression ')'
     |   intLiteral
+    |   read
 //    |   boolLiteral
 //    |   tupleLiteral
 //    |   seqArrayLiteral
@@ -49,6 +56,10 @@ basic
 
 intLiteral
     :   IntLiteral
+    ;
+
+read
+    :   'read()'
     ;
 
 Identifier

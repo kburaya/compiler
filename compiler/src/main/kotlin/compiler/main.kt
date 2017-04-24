@@ -1,4 +1,5 @@
 package compiler
+import compiler.ast.Program
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 
@@ -8,7 +9,11 @@ import org.antlr.v4.runtime.CommonTokenStream
 
 fun main(args: Array<String>) {
     // get lexer
-    val grammarLexer = GrammarLexer(ANTLRInputStream("i := (2+2)*3 / 2;"))
+    val grammarLexer = GrammarLexer(ANTLRInputStream("""
+        a := read();
+        b := read();
+        write(2 * a + b)
+    """))
     // get list of tokens
     val tokenStream = CommonTokenStream(grammarLexer)
     // pass tokens to parser
@@ -17,5 +22,6 @@ fun main(args: Array<String>) {
     val programContext = grammarParser.program()
     // walk and attach the listener
     val visitor = CompilerGrammarVisitor()
-    visitor.visitProgram(programContext)
+    val program = visitor.visitProgram(programContext)
+    program.interpretate()
 }
