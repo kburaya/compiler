@@ -16,6 +16,7 @@ statement
     :   globalDeclaration
     |   write
     |   expression
+    |   skip
     |   first=statement ';' second=statement
     ;
 
@@ -30,6 +31,10 @@ globalDeclaration
 
 write
     :   'write' '(' expression ')'
+    ;
+
+skip
+    :   'skip'
     ;
 
 expression

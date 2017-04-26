@@ -55,6 +55,7 @@ class CompilerGrammarVisitor : GrammarBaseVisitor<CompilerTree>() {
             ctx.write() != null -> visitWrite(ctx.write())
             ctx.expression() != null -> StatementExpression(visitExpression(ctx.expression()))
             ctx.first != null -> SequenceStatement(visitStatement(ctx.first), visitStatement(ctx.second))
+            ctx.skip() != null -> visitSkip(ctx.skip())
             else -> throw IllegalStateException()
         }
     }
@@ -63,6 +64,8 @@ class CompilerGrammarVisitor : GrammarBaseVisitor<CompilerTree>() {
         val result = visitExpression(ctx.expression())
         return Write(result)
     }
+
+    override fun visitSkip(ctx: GrammarParser.SkipContext): Statement = Skip()
 
     override fun visitProgram(ctx: GrammarParser.ProgramContext): Program {
         return Program(visitStatement(ctx.statement()))

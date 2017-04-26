@@ -8,7 +8,11 @@ import java.util.*
 
 class Read : Expression() {
     override fun interpretate(symbolTable: Map<String, Int>): Int {
-        val scanner = Scanner(System.`in`)
-        return scanner.nextInt()
+        print("> ")
+        return SCANNER.nextInt()
+    }
+
+    companion object {
+        private val SCANNER = Scanner(System.`in`)
     }
 }

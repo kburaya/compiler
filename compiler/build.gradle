@@ -5,18 +5,20 @@ buildscript {
     ext.kotlin_version = '1.1.1'
 
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'antlr'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 generateGrammarSource {
@@ -29,3 +31,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     antlr "org.antlr:antlr4:4.6"
 }
+
+shadowJar {
+    classifier = null
+    manifest {
+        attributes 'Main-Class': 'compiler.Main'
+    }
+}
+
