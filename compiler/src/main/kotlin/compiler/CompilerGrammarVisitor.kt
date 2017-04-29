@@ -5,7 +5,6 @@ import compiler.ast.*
 /**
  * Created by kseniya on 18/04/2017.
  */
-private val ARITHMETIC_OPERATION = listOf("+", "-", "*", "/", "%")
 
 class CompilerGrammarVisitor : GrammarBaseVisitor<CompilerTree>() {
 
@@ -17,10 +16,7 @@ class CompilerGrammarVisitor : GrammarBaseVisitor<CompilerTree>() {
             val leftResult = visitExpression(ctx.left)
             val rightResult = visitExpression(ctx.right)
             val operation = ctx.op.text
-            return when {
-                operation in ARITHMETIC_OPERATION -> ArithmeticBinaryExpression(leftResult, rightResult, operation)
-                else -> throw IllegalStateException("unknown binary operation")
-            }
+            return BinaryExpression(leftResult, rightResult, operation)
         }
         throw IllegalStateException()
     }
@@ -35,7 +31,7 @@ class CompilerGrammarVisitor : GrammarBaseVisitor<CompilerTree>() {
         }
     }
 
-    override fun visitRead(ctx: GrammarParser.ReadContext): Read = Read()
+    override fun visitRead(ctx: GrammarParser.ReadContext): Read = Read
 
     override fun visitIntLiteral(ctx: GrammarParser.IntLiteralContext): IntConstant {
         return IntConstant(ctx.IntLiteral().text.toInt())

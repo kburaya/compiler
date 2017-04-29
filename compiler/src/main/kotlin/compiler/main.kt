@@ -1,11 +1,10 @@
 @file:JvmName("Main")
 package compiler
 import compiler.ast.Program
+import compiler.stack.StackMachine
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStreamReader
 
 /**
  * Created by kseniya on 18/04/2017.
@@ -16,8 +15,14 @@ fun main(args: Array<String>) {
     when (args[0]) {
         "-i" -> try {
             val programSource = readFile(args[1])
-            interpretateInput(programSource)
+            interpretate(programSource)
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        "-s" -> try {
+            val programSource = readFile(args[1])
+            runStackMachine(programSource)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -26,7 +31,19 @@ fun main(args: Array<String>) {
 
 fun readFile(input: String): String = File(input).readText()
 
-fun interpretateInput(programSource: String) {
+fun interpretate(programSource: String) {
+    val program = parseProgram(programSource)
+    program.interpretate()
+}
+
+fun runStackMachine(programSource: String) {
+    val program = parseProgram(programSource)
+    val stackOperations = program.generateStackCode()
+    val stackMachine = StackMachine()
+    stackMachine.intepretate(stackOperations)
+}
+
+fun parseProgram(programSource: String): Program {
     val grammarLexer = GrammarLexer(ANTLRInputStream(programSource))
     // get list of tokens
     val tokenStream = CommonTokenStream(grammarLexer)
@@ -36,6 +53,5 @@ fun interpretateInput(programSource: String) {
     val programContext = grammarParser.program()
     // walk and attach the listener
     val visitor = CompilerGrammarVisitor()
-    val program = visitor.visitProgram(programContext)
-    program.interpretate()
+    return visitor.visitProgram(programContext)
 }
